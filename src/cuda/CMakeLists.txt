@@ -60,7 +60,7 @@ endif()
 # Kernels are grouped by the compute capabilities they are valid for so nvcc is
 # never asked to target an arch a kernel cannot build for (e.g. fp8 < sm_89,
 # int4 removed on sm_90+, fp4 only on sm_120a).
-set(CLPEAK_CUDA_ARCHS "70;75;80;86;89;90;100;120" CACHE STRING
+set(CLPEAK_CUDA_ARCHS "70;75;80;86;89;90;100;120;121" CACHE STRING
     "CUDA compute capabilities to bake into the fatbins (ascending)")
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmbedCudaKernels.cmake)
@@ -76,7 +76,7 @@ embed_cuda_kernels(TARGET peak_cuda MASTER_ARCHS "${CLPEAK_CUDA_ARCHS}" MIN_ARCH
     KERNELS wmma_int8)
 
 # INT4 mma.sync -- sm_75..sm_89 only (removed on Hopper+).
-embed_cuda_kernels(TARGET peak_cuda MASTER_ARCHS "${CLPEAK_CUDA_ARCHS}" MIN_ARCH 75 MAX_ARCH 89
+embed_cuda_kernels(TARGET peak_cuda MASTER_ARCHS "${CLPEAK_CUDA_ARCHS}" MIN_ARCH 75 MAX_ARCH 89 EXTRA_ARCHS "121"
     KERNELS wmma_int4)
 
 # Ampere+ tensor cores: bf16 / tf32 / fp64 / int8 m16n8k32 + int8 2:4 sparse
@@ -90,6 +90,6 @@ embed_cuda_kernels(TARGET peak_cuda MASTER_ARCHS "${CLPEAK_CUDA_ARCHS}" MIN_ARCH
 
 # FP4 / MXFP4 / NVFP4 mma.sync (dense + 2:4 sparse) -- Blackwell sm_120a.
 embed_cuda_kernels(TARGET peak_cuda MASTER_ARCHS "${CLPEAK_CUDA_ARCHS}" MIN_ARCH 999
-    EXTRA_ARCHS "120a"
+    EXTRA_ARCHS "120a;121a"
     KERNELS wmma_fp4_e2m1 wmma_mxf4_e2m1 wmma_nvf4_e2m1
             wmma_mxf4_sparse wmma_nvf4_sparse)

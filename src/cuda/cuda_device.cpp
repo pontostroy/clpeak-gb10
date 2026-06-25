@@ -94,7 +94,7 @@ bool CudaDevice::init(int devIndex)
   // Hopper+ (sm_90+).  Allow 7.5..8.9 inclusive.
   {
     int cc = info.major * 10 + info.minor;
-    info.int4MmaSupported = (cc >= 75) && (cc <= 89);
+    info.int4MmaSupported = (cc >= 75) && (cc <= 89) || (cc == 121);
   }
   info.int8MmaSparseSupported = (info.major >= 8);
 
